@@ -1,9 +1,15 @@
 FROM python:3.11
+
+# Carpeta de trabajo dentro del contenedor
 WORKDIR /app
+
+# Copiamos e instalamos dependencias
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /app
+# Copiamos el resto del proyecto
+COPY . .
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Comando final: arrancar Gunicorn apuntando al proyecto correcto
+CMD ["gunicorn", "auth_service.wsgi:application", "--bind", "0.0.0.0:8000"]
