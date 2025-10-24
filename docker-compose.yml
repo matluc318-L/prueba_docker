@@ -24,12 +24,19 @@ services:
     build: ./auth-client
     container_name: auth_client
     ports:
-      - "5173:80"   # puerto del navegador
+      - "5175:5173"   # puerto del navegador
     depends_on:
       - auth  # ✅ corregido: coincide con el nombre real del servicio backend
     environment:
       - VITE_API_URL=http://auth:8000/api  # ✅ frontend hablará con Django dentro de la red Docker
 
+  blog_client:
+    build: ./blog-client
+    container_name: blog_client
+    ports:
+      - "5173:90"  # Frontend accesible en http://localhost:5173
+    depends_on:
+      - auth
   postgres:
     image: postgres:15
     container_name: db_postgres
@@ -53,6 +60,8 @@ services:
       - .env
     ports:
       - "${REDIS_PORT:-6379}:6379"
+
+      
 
 volumes:
   pgdata:
